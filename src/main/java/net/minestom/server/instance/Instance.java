@@ -513,7 +513,7 @@ public abstract class Instance implements Block.Getter, Block.Setter,
      * @throws IllegalStateException if {@code timeRate} is lower than 0
      */
     public void setTimeRate(int timeRate) {
-        Check.stateCondition(timeRate < 0, "The time rate cannot be lower than 0");
+        // Check.stateCondition(timeRate < 0, "The time rate cannot be lower than 0");
         this.timeRate = timeRate;
     }
 
@@ -797,10 +797,18 @@ public abstract class Instance implements Block.Getter, Block.Setter,
         // Time
         {
             this.worldAge++;
-            this.time += timeRate;
+            this.time += this.timeRate;
+
             // time needs to be sent to players
-            if (timeSynchronizationTicks > 0 && this.worldAge % timeSynchronizationTicks == 0) {
-                PacketSendingUtils.sendGroupedPacket(getPlayers(), createTimePacket());
+            if (this.timeRate < 0) {
+                if (timeSynchronizationTicks > 0 && this.worldAge % (timeSynchronizationTicks / 10) == 0) {
+                    PacketSendingUtils.sendGroupedPacket(getPlayers(), createTimePacket());
+                }
+            }
+            else {
+                if (timeSynchronizationTicks > 0 && this.worldAge % timeSynchronizationTicks == 0) {
+                    PacketSendingUtils.sendGroupedPacket(getPlayers(), createTimePacket());
+                }
             }
 
         }
