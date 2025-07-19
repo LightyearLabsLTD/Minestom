@@ -1,4 +1,4 @@
-rootProject.name = "minestom"
+rootProject.name = "galactra"
 
 includeBuild("build-src")
 
